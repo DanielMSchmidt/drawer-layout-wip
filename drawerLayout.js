@@ -67,6 +67,7 @@ export default class DrawerLayout extends Component {
       const drawerShown = value > 0;
       if (drawerShown !== this.state.drawerShown) {
         this.setState({ drawerShown });
+        console.log('setting drawer shown', this.state.drawerShown, drawerShown);
       }
 
       if (this.props.keyboardDismissMode === 'on-drag') {
@@ -142,6 +143,8 @@ export default class DrawerLayout extends Component {
     });
     const animatedOverlayStyles = { opacity: overlayOpacity };
 
+    console.log('rerender', drawerShown);
+
     return (
       <View
         style={{ flex: 1, backgroundColor: 'transparent' }}
@@ -152,9 +155,10 @@ export default class DrawerLayout extends Component {
         </Animated.View>
 
         {drawerShown &&
-          <TouchableWithoutFeedback onPress={this._onOverlayClick}>
-            <Animated.View style={[styles.overlay, animatedOverlayStyles]} />
-          </TouchableWithoutFeedback>}
+          <TouchableWithoutFeedback onLayout={({nativeEvent: {layout}}) => console.log('layouting', layout)} onPress={this._onOverlayClick}>
+            <Animated.View style={[styles.overlay, animatedOverlayStyles, {backgroundColor: '#FF0000'}]} />
+          </TouchableWithoutFeedback>
+        }
         <Animated.View
           style={[styles.drawer, dynamicDrawerStyles, animatedDrawerStyles]}
         >
