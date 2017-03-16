@@ -166,6 +166,7 @@ export default class DrawerLayout extends Component {
                     onPress={this._onOverlayClick}
                 >
                     <Animated.View
+                        pointerEvents={drawerShown ? 'auto' : 'none'}
                         style={[
                             drawerShown && styles.overlay,
                             animatedOverlayStyles,
@@ -347,13 +348,13 @@ export default class DrawerLayout extends Component {
                     previouslyOpen &&
                     moveX < THRESHOLD)
             ) {
-                this.openDrawer({ velocity: (-1) * vx });
+                this.openDrawer({ velocity: -1 * vx });
             } else if (
                 (vx > 0 && moveX > THRESHOLD) ||
                 vx > VX_MAX ||
                 (isWithinVelocityThreshold && !previouslyOpen)
             ) {
-                this.closeDrawer({ velocity: (-1) * vx });
+                this.closeDrawer({ velocity: -1 * vx });
             } else if (previouslyOpen) {
                 this.openDrawer();
             } else {
