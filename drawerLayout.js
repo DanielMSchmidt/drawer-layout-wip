@@ -4,7 +4,6 @@ import dismissKeyboard from 'react-native-dismiss-keyboard';
 import {
     Animated,
     Dimensions,
-    InteractionManager,
     PanResponder,
     StyleSheet,
     TouchableWithoutFeedback,
@@ -52,8 +51,6 @@ export default class DrawerLayout extends Component {
     constructor(props, context) {
         super(props, context);
 
-        this.interactionHandle = null;
-
         this.state = {
             openValue: new Animated.Value(0),
             drawerShown: false,
@@ -67,26 +64,10 @@ export default class DrawerLayout extends Component {
             const drawerShown = value > 0;
             if (drawerShown !== this.state.drawerShown) {
                 this.setState({ drawerShown });
-                console.log(
-                    'setting drawer shown',
-                    this.state.drawerShown,
-                    drawerShown,
-                );
             }
 
             if (this.props.keyboardDismissMode === 'on-drag') {
                 dismissKeyboard();
-            }
-
-            if (value === 0 || value === 1) {
-                if (this.interactionHandle) {
-                    InteractionManager.clearInteractionHandle(
-                        this.interactionHandle,
-                    );
-                    this.interactionHandle = undefined;
-                }
-            } else if (!this.interactionHandle) {
-                this.interactionHandle = InteractionManager.createInteractionHandle();
             }
 
             this._lastOpenValue = value;
@@ -149,8 +130,6 @@ export default class DrawerLayout extends Component {
         });
         const animatedOverlayStyles = { opacity: overlayOpacity };
 
-        console.log('rerender', this.state);
-
         return (
             <View
                 style={{ flex: 1, backgroundColor: 'transparent' }}
@@ -160,17 +139,11 @@ export default class DrawerLayout extends Component {
                     {this.props.children}
                 </Animated.View>
 
-                <TouchableWithoutFeedback
-                    onLayout={({ nativeEvent: { layout } }) =>
-                        console.log('layouting', layout)}
-                    onPress={this._onOverlayClick}
-                >
+                <TouchableWithoutFeedback onPress={this._onOverlayClick}>
                     <Animated.View
-                        pointerEvents={drawerShown ? 'auto' : 'none'}
                         style={[
                             drawerShown && styles.overlay,
                             animatedOverlayStyles,
-                            { backgroundColor: '#FF0000' },
                         ]}
                     />
                 </TouchableWithoutFeedback>
