@@ -1,0 +1,21 @@
+box: node
+build:
+  steps:
+    - script:
+      name: Install Exponent CLI
+      code: |
+        npm install -g exp
+
+    # A step that executes `npm install` command
+    - npm-install
+
+    # Steps to run the deployment
+    - script:
+      name: Log-in to exponent account
+      code: |
+        exp login -u $EXPO_USERNAME -p $EXPO_PASSWORD
+
+    - script:
+      name: Publish the application
+      code: |
+        exp publish
